@@ -1,0 +1,21 @@
+{
+  "name": "ss-qa-showcase",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Read-only Playwright checks for the public Sentient Solutions website. Tested in CI.",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "playwright test",
+    "test:list": "playwright test --list",
+    "typecheck": "tsc --noEmit",
+    "report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.11.0",
+    "@playwright/test": "^1.58.2",
+    "@types/node": "^22.19.0",
+    "typescript": "^5.9.3"
+  }
+}
