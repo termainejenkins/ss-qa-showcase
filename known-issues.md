@@ -14,7 +14,7 @@ Time Keeper's pin on the same date was `v1.0.4`, and GitHub latest for that repo
 
 Content routes use `trailingSlash: 'always'`: `/about` returns 308 to `/about/`. The not-found template is the exception.
 
-- An unknown path such as `/this-page-is-not-on-the-site/` returns **404** and the "Page not found" page. Its canonical is `https://sentientsolutions-site.pages.dev/404/`.
+- An unknown path such as `/this-page-is-not-on-the-site/` returns **404** and the "Page not found" page. Its canonical is `https://sentientsolutions.dev/404/`. On 2026-10-27 that canonical used the pages.dev host. The site now publishes `sentientsolutions.dev` as the canonical host on both origins.
 - Requesting `/404/` returns **308** to `/404` (no trailing slash).
 - `/404` returns **200**.
 
