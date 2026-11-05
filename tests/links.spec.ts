@@ -3,7 +3,7 @@ import { test, expect } from './support/fixtures';
 import { fetchReadOnly, probeStatus, type Probe } from './support/http';
 import { parseSitemapLocs } from './support/sitemap';
 import { HTML_ROUTES } from './support/routes';
-import { originFrom } from './support/site';
+import { CANONICAL_ORIGIN, originFrom } from './support/site';
 import {
   extractAnchorHrefs,
   forbiddenReason,
@@ -40,8 +40,8 @@ test('same-origin links from the sitemap and pages return 200', async ({ request
       failures.push(`unparseable sitemap loc ${loc}`);
       continue;
     }
-    if (url.origin !== origin) {
-      failures.push(`sitemap loc is outside SITE_URL: ${url.href}`);
+    if (url.origin !== CANONICAL_ORIGIN) {
+      failures.push(`sitemap loc is not on the canonical origin: ${url.href}`);
       continue;
     }
     urls.add(url.href);
