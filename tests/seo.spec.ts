@@ -3,17 +3,16 @@ import { fetchReadOnly } from './support/http';
 import { openHtml } from './support/page-health';
 import { HTML_ROUTES } from './support/routes';
 import { parseRobotsSitemap, parseSitemapLastmods, parseSitemapLocs } from './support/sitemap';
-import { originFrom } from './support/site';
+import { CANONICAL_ORIGIN, originFrom } from './support/site';
 
 test.describe('canonical and meta description', () => {
   for (const route of HTML_ROUTES) {
-    test(`${route.name} (${route.path}) has a canonical URL and a description`, async ({ page }, testInfo) => {
-      const origin = originFrom(testInfo.project.use.baseURL as string | undefined);
+    test(`${route.name} (${route.path}) has a canonical URL and a description`, async ({ page }) => {
       const response = await openHtml(page, route.path);
       expect(response?.status()).toBe(200);
 
       const canonical = await page.locator('link[rel="canonical"]').getAttribute('href');
-      expect(canonical).toBe(new URL(route.path, origin).href);
+      expect(canonical).toBe(new URL(route.path, CANONICAL_ORIGIN).href);
 
       const description = await page.locator('meta[name="description"]').getAttribute('content');
       expect(description?.trim().length ?? 0).toBeGreaterThan(0);
@@ -41,7 +40,7 @@ test('robots.txt allows crawling and names the sitemap', async ({ request }, tes
   const body = await response.text();
   expect(body).toMatch(/User-agent:\s*\*/i);
   expect(body).toMatch(/Allow:\s*\//);
-  expect(parseRobotsSitemap(body)).toBe(new URL('/sitemap.xml', origin).href);
+  expect(parseRobotsSitemap(body)).toBe(new URL('/sitemap.xml', CANONICAL_ORIGIN).href);
 });
 
 test('sitemap.xml is well formed and every URL in it loads', async ({ request }, testInfo) => {
@@ -66,7 +65,7 @@ test('sitemap.xml is well formed and every URL in it loads', async ({ request },
   const failures: string[] = [];
   for (const loc of locs) {
     const url = new URL(loc);
-    expect(url.origin, loc).toBe(origin);
+    expect(url.origin, loc).toBe(CANONICAL_ORIGIN);
     const page = await fetchReadOnly(request, 'GET', url.href);
     if (page.status() !== 200) failures.push(`${page.status()} ${url.pathname}`);
   }

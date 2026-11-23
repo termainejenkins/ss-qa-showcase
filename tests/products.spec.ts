@@ -1,6 +1,10 @@
 import { test, expect } from './support/fixtures';
 import { openHtml } from './support/page-health';
 
+/** GitHub's moving latest URL, or a pinned vX.Y.Z tag, on SS_GameLauncher only. */
+const LAUNCHER_RELEASES_HREF =
+  /^https:\/\/github\.com\/termainejenkins\/SS_GameLauncher\/releases\/(?:latest|tag\/v\d+\.\d+\.\d+)$/;
+
 test.describe('products index', () => {
   test('links to Time Keeper, AutoNote, and SS Game Launcher', async ({ page }) => {
     await openHtml(page, '/products/');
@@ -78,7 +82,28 @@ test.describe('SS Game Launcher', () => {
     // This test checks that the page shows the file it links to. See known-issues.md.
     await expect(page.getByRole('link', { name: /All releases and checksums/ })).toHaveAttribute(
       'href',
-      'https://github.com/termainejenkins/SS_GameLauncher/releases/latest',
+      LAUNCHER_RELEASES_HREF,
     );
+  });
+
+  test('all-releases link is latest or a pinned semver tag on this repo', () => {
+    const accepted = [
+      'https://github.com/termainejenkins/SS_GameLauncher/releases/latest',
+      'https://github.com/termainejenkins/SS_GameLauncher/releases/tag/v1.2.0',
+    ];
+    const rejected = [
+      'https://github.com/termainejenkins/SS_GameLauncher/releases',
+      'https://github.com/termainejenkins/SS_GameLauncher/releases/latest/',
+      'https://github.com/termainejenkins/SS_GameLauncher/releases/tag/v1.2',
+      'https://github.com/termainejenkins/SS_GameLauncher/releases/tag/v1.2.0/',
+      'https://github.com/termainejenkins/SS_GameLauncher/releases/tag/v1.2.0-beta.1',
+      'https://github.com/termainejenkins/SS_GameLauncher/releases/download/v1.2.0/SS_GameLauncher-Setup-1.2.0.exe',
+      'https://github.com/termainejenkins/TimeKeeper/releases/latest',
+      'https://github.com/termainejenkins/TimeKeeper/releases/tag/v1.2.0',
+      'https://github.com/other/SS_GameLauncher/releases/tag/v1.2.0',
+      'https://github.com/termainejenkins/SS_GameLauncher/releases/tag/v1.2.0?ref=site',
+    ];
+    for (const href of accepted) expect(href, href).toMatch(LAUNCHER_RELEASES_HREF);
+    for (const href of rejected) expect(href, href).not.toMatch(LAUNCHER_RELEASES_HREF);
   });
 });

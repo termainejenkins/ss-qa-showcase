@@ -6,7 +6,7 @@ Read-only Playwright checks for the public Sentient Solutions website. The suite
 
 These tests were written with AI assistance, directed and reviewed by the author (TJ).
 
-The site is an Astro static site. CI uses `https://sentientsolutions-site.pages.dev`. The same site is also reachable at `https://sentientsolutions.dev`. Canonical URLs point at the pages.dev origin.
+The site is an Astro static site. CI fetches `https://sentientsolutions-site.pages.dev`. The same site is also served at `https://sentientsolutions.dev`, which is the published canonical origin for canonical links, the sitemap, and `robots.txt`.
 
 ## Run
 
@@ -86,6 +86,6 @@ After this is merged, enable Pages or the deploy job has nowhere to publish: **S
 - Desktop Chromium and the default dark theme only. The light theme and the collapsed mobile nav are not separate scans.
 - No authenticated flows, and no accounts to authenticate with.
 - A third party that returns 403 for a genuinely removed URL is counted as a skip. The annotation lists those URLs.
-- Canonical assertions expect the `SITE_URL` origin. The published canonical host is `sentientsolutions-site.pages.dev`, so that is the origin CI sets. Pointing `SITE_URL` at `https://sentientsolutions.dev` fails the canonical check because the site still canonicalizes to pages.dev.
+- Canonical, sitemap, and robots assertions expect `https://sentientsolutions.dev`, including when `SITE_URL` is the pages.dev host. CI stays on pages.dev because `sentientsolutions.dev` injects a Cloudflare Web Analytics beacon that POSTs to `/cdn-cgi/rum`. The read-only page fixture fails that request, so pointing `SITE_URL` at the custom domain fails the browser tests.
 - AutoNote is covered as an unpublished Chrome extension. A real release should update that test, not the allowlist.
 - The Pages report is the static Playwright HTML report. Trace viewing is more reliable locally via `npm run report` than on GitHub Pages.

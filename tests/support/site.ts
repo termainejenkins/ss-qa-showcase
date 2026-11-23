@@ -1,5 +1,13 @@
-/** Public pages.dev origin. sentientsolutions.dev serves the same site and canonicalizes here. */
+/**
+ * Host the suite opens in the browser. CI sets this.
+ * sentientsolutions.dev serves the same pages, but that host injects a
+ * Cloudflare Web Analytics beacon (POST /cdn-cgi/rum). The read-only page
+ * fixture rejects that request, so browser checks stay on this origin.
+ */
 export const DEFAULT_SITE_ORIGIN = 'https://sentientsolutions-site.pages.dev';
+
+/** Canonical links, sitemap locs, and the robots.txt Sitemap line use this origin. */
+export const CANONICAL_ORIGIN = 'https://sentientsolutions.dev';
 
 /** SITE_URL is an origin. A path, query, or hash on the env value is ignored. */
 export function resolveSiteOrigin(raw = process.env.SITE_URL): string {
