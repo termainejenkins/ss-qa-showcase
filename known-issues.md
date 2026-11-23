@@ -2,13 +2,11 @@
 
 Observed against `https://sentientsolutions-site.pages.dev` on 2026-10-27. These are properties of the live site. Tests stay strict. An accessibility exception belongs in `tests/support/a11y-allowlist.ts` with a reason. Other findings stay documented here, and the assertion that caught them stays in place.
 
-## SS Game Launcher pins an older installer than GitHub latest
+## SS Game Launcher installer pin
 
-The launcher page links `SS_GameLauncher-Setup-1.0.1.exe` under `/releases/download/v1.0.1/`. On 2026-10-27, `https://github.com/termainejenkins/SS_GameLauncher/releases/latest` redirected to tag `v1.1.5`.
+The launcher download test accepts any `vX.Y.Z` `.exe` under `SS_GameLauncher` `/releases/download/`. It checks that the linked URL resolves. It does not fail when that pin is older than GitHub latest. Version skew is a content issue on the site, not a broken link.
 
-The v1.0.1 asset still answers 302, then 200. The download test checks that the linked URL resolves. It does not fail when the pin is older than the latest tag. Version skew is a content issue on the site, not a broken link.
-
-Time Keeper's pin on the same date was `v1.0.4`, and GitHub latest for that repo was also `v1.0.4`.
+On 2026-10-27 the page linked `SS_GameLauncher-Setup-1.0.1.exe` and `releases/latest` redirected to `v1.1.5`. On 2026-11-23 the page linked `SS_GameLauncher-Setup-1.2.0.exe` and `releases/latest` redirected to `v1.2.0`. Time Keeper still linked `v1.0.4`, which matched GitHub latest on 2026-10-27.
 
 ## Not-found template drops the trailing slash
 
